@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Categories,Article
+from .models import Categories,Article,About
 
 
 class BlogAdmin(admin.ModelAdmin):
@@ -9,5 +9,19 @@ class BlogAdmin(admin.ModelAdmin):
     search_fields =('id','title','category__category_name','status')
     list_editable=('is_feature',)
 
+
+
+class AboutAdmin(admin.ModelAdmin):
+    def has_had_permission(self,equest):
+        count = About.objects.all().count()
+        if count == 0:
+            return True
+        return False
+
 admin.site.register(Categories)
 admin.site.register(Article,BlogAdmin)
+admin.site.register(About,AboutAdmin)
+
+
+
+

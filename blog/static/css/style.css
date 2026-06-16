@@ -1,3 +1,77 @@
+.blog-header {
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.blog-header-logo {
+    font-size: 32px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.blog-header-logo:hover {
+    color: #ffc107;
+    text-decoration: none;
+}
+
+.nav-link-custom {
+    color: #111827;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.nav-link-custom:hover {
+    color: #ffc107;
+    text-decoration: none;
+}
+
+.form-control:focus {
+    box-shadow: none;
+    border-color: #ffc107;
+}
+
+.footer {
+    background: #111;
+    color: #ddd;
+}
+
+.footer a {
+    color: #ddd;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.footer a:hover {
+    color: gold;
+    padding-left: 5px;
+}
+
+.footer h4,
+.footer h5 {
+    font-weight: 700;
+}
+
+.footer hr {
+    border-color: #444;
+}
+
+.nav-link-custom {
+    text-decoration: none;
+    color: #333;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.nav-link-custom:hover {
+    color: #ffc107;
+}
+
+
+
+
+
+
+
 .blog-card {
     border: none;
     border-radius: 15px;
@@ -34,7 +108,7 @@
 }
 
 
-.scroll-text a{
+.scroll-text a {
     display: inline-block;
     margin-right: 50px;
     font-size: 18px;
@@ -43,7 +117,7 @@
     text-decoration: none;
 }
 
-.scroll-text a:hover{
+.scroll-text a:hover {
     color: gold;
 }
 

@@ -22,7 +22,7 @@
                     {{ post.short_description|truncatewords:20 }}
                 </p>
 
-                <a href="{% url 'post_detail' post.id %}" class="btn btn-dark">
+                <a href="{% url 'post_detail' post.slug %}" class="btn btn-dark">
                     Read More
                 </a>
             </div>

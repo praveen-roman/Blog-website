@@ -2,12 +2,26 @@
 {% load static %}
 
 {% block content %}
+
+{% if posts %}
+
+{% for post in posts %}
+<!-- your post card -->
+{% endfor %}
+
+{% else %}
+
+<div class="alert alert-warning text-center">
+    No posts found.
+</div>
+
+{% endif %}
 <div class="scroll-container mt-4 mb-4">
     <div class="scroll-text">
         {% for category in categories %}
-            <a href="{% url 'category_posts' category.id %}"   class="d-inline-block fw-bold me-5">
-              <strong  style="color: gold;" class="me-4"> {{ category.category_name }}  </strong>
-            </a>
+        <a href="{% url 'category_posts' category.id %}" class="d-inline-block fw-bold me-5">
+            <strong style="color: gold;" class="me-4"> {{ category.category_name }} </strong>
+        </a>
         {% endfor %}
     </div>
 </div>
@@ -17,7 +31,8 @@
     <div class="col-md-8 px-0">
         <h1 class="display-4 font-italic text-light">{{post.title}}</h1>
         <p class="lead my-3 text-light">{{post.short_description|truncatewords:8}}</p>
-        <p class="lead mb-0"><a href="{% url 'post_detail' post.id %}" class="text-white font-weight-bold">Continue reading...</a></p>
+        <p class="lead mb-0"><a href="{% url 'post_detail' post.slug %}" class="text-white font-weight-bold">Continue
+                reading...</a></p>
     </div>
 </div>
 {% endif %}
@@ -59,7 +74,7 @@
                     <strong style="color: rgb(20, 20, 20);"> {{ post.author }} </strong>
                 </p>
 
-                <a href="{% url 'post_detail' post.id %}" class="btn btn-dark">
+                <a href="{% url 'post_detail' post.slug %}" class="btn btn-dark">
                     Read More
                 </a>
 
@@ -69,24 +84,5 @@
     {% endif %}
     {% endfor %}
     </div>
-
-
-
-    <aside class="col-md-4 blog-sidebar">
-        <div class="p-3 mb-3 bg-light rounded">
-            <h4 class="font-italic">About</h4>
-            <p class="mb-0">Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit
-                amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
-        </div>
-
-        <div class="p-3">
-            <h4 class="font-italic">Follow Us</h4>
-            <ol class="list-unstyled">
-                <li><a href="#">GitHub</a></li>
-                <li><a href="#">LinkedIn</a></li>
-            </ol>
-        </div>
-    </aside><!-- /.blog-sidebar -->
-
 
     {% endblock %}

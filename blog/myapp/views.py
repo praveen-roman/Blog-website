@@ -1,19 +1,26 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Categories, Article
+from .models import Categories, Article,About
 
+
+from django.db.models import Q
 
 def home(request):
+    search = request.GET.get('search')
 
     posts = Article.objects.filter(
         is_feature=True
-    ).order_by('-created_at')[:6]
+    ).order_by('-created_at')
 
-    context = {
+    if search:
+        posts = posts.filter(
+            Q(title__icontains=search) | Q(short_description__icontains=search)
+        )
+
+    posts = posts[:6]
+
+    return render(request, 'home.html', {
         'posts': posts
-    }
-
-    return render(request, 'home.html', context)
-
+    })
 
 def category_posts(request, id):
 
@@ -32,11 +39,11 @@ def category_posts(request, id):
     return render(request, 'category_post.html', context)
 
 
-def post_detail(request, id):
+def post_detail(request, slug):
 
     post = get_object_or_404(
         Article,
-        id=id,
+        slug=slug,
         status='Published'
     )
 
@@ -45,3 +52,13 @@ def post_detail(request, id):
     }
 
     return render(request, 'post_detail.html', context)
+
+
+def about(request):
+    detail = About.objects.latest('created_at')
+
+    return render(request, 'about.html', {'detail': detail})
+
+
+def search(request):
+    return render(request,'search.html')
