@@ -1,12 +1,12 @@
 from django.shortcuts import render, get_object_or_404,redirect
 from .models import Categories, Article,About
-from .form import RegisterForm,LoginForm
+from .form import RegisterForm,LoginForm,CategoryForm
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate ,login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import logout
-
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
 def home(request):
@@ -100,7 +100,7 @@ def login_page(request):
                 "You have logged in successfully!"
             )
 
-            return redirect('home')
+            return redirect('dashboard')
 
         messages.error(
             request,
@@ -143,3 +143,62 @@ def logout_page(request):
         )
 
     return redirect('home')
+
+@login_required(login_url=login_page)
+def dashboard(request):
+    article_count=Article.objects.count()
+    category_count=Categories.objects.count()
+    context={
+        'article_counts':article_count,'category_counts':category_count
+    }
+    return render(request,'dashboard/dashboard.html',context)
+
+
+def categories(request):
+    return render(request,'dashboard/categories.html')
+
+def add_category(request):
+    if request.method=="POST":
+        form=CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('categories')
+    else:
+        form =CategoryForm()
+  
+    return render(request,'dashboard/add_category.html',{'form':form})
+
+
+def edit_category(request, pk):
+
+    category = get_object_or_404(Categories, pk=pk)
+
+    if request.method == 'POST':
+        form = CategoryForm(
+            request.POST,
+            instance=category
+        )
+
+        if form.is_valid():
+            form.save()
+            return redirect('categories')
+
+    else:
+        form = CategoryForm(instance=category)
+
+    context = {
+        'form': form,
+        'category': category
+    }
+
+    return render(
+        request,
+        'dashboard/edit_category.html',
+        context
+    )
+
+
+def delete_category(request,pk):
+    category=get_object_or_404(Categories,pk=pk)
+    category.delete()
+    return redirect('categories')

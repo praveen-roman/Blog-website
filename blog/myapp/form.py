@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
+from .models import Categories
 
 
 class RegisterForm(UserCreationForm):
@@ -26,3 +27,10 @@ class LoginForm(forms.Form):
         widget=forms.PasswordInput(),
         required=True
     )
+
+
+class CategoryForm(forms.ModelForm):
+
+    class Meta:
+        model=Categories
+        fields ='__all__'

@@ -20,6 +20,12 @@
                 <a href="{% url 'about' %}" class="mx-3 nav-link-custom">
                     About
                 </a>
+                {% if user.is_authenticated %}
+
+                <a href="{% url 'dashboard' %}" class="mx-3 nav-link-custom">
+                    DashBoard
+                </a>
+                {% endif %}
             </div>
 
             <!-- Search -->
@@ -55,7 +61,6 @@
                 <span class="mr-3">
                     Welcome, {{ user.username }}
                 </span>
-
                 <a class="btn btn-danger btn-sm" href="{% url 'logout_page' %}">
                     Logout
                 </a>
