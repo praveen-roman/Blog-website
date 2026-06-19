@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404,redirect
 from .models import Categories, Article,About
-from .form import RegisterForm,LoginForm,CategoryForm
+from .form import RegisterForm,LoginForm,CategoryForm,ArticleForm
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate ,login
@@ -202,3 +202,44 @@ def delete_category(request,pk):
     category=get_object_or_404(Categories,pk=pk)
     category.delete()
     return redirect('categories')
+
+def articles(request):
+    article=Article.objects.all()
+    return render(request,'dashboard/articles.html',{'articles':article})
+
+def add_articles(request):
+    if request.method=="POST":
+        form=ArticleForm(request.POST,request.FILES)
+        if form.is_valid():
+            post=form.save(commit=False)
+            post.author=request.user
+            post.save()
+            return redirect('articles')
+        else:
+            print(form.errors) 
+    else:
+        form =ArticleForm()
+  
+    return render(request,'dashboard/add_article.html',{'form':form})
+
+def edit_articles(request,pk):
+    article=get_object_or_404(Article,pk=pk)
+    if request.method=="POST":
+        form=ArticleForm(request.POST,request.FILES,instance=article)
+        if form.is_valid():
+            form.save()
+            return redirect('articles')
+    else:
+        form=ArticleForm(instance=article)
+    context = {
+        'form': form,
+        'articles': article
+    }
+    
+    return render(request,'dashboard/edit_article.html',context)
+
+
+def delete_articles(request,pk):
+    article=get_object_or_404(Article,pk=pk)
+    article.delete()
+    return redirect('articles')

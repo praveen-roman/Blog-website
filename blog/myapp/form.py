@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from .models import Categories
+from .models import Categories,Article
 
 
 class RegisterForm(UserCreationForm):
@@ -34,3 +34,9 @@ class CategoryForm(forms.ModelForm):
     class Meta:
         model=Categories
         fields ='__all__'
+
+class ArticleForm(forms.ModelForm):
+
+    class Meta:
+        model=Article
+        fields = ('title','category','featured_image','short_description','blogbody','status','is_feature')
