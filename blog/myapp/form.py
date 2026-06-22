@@ -40,3 +40,14 @@ class ArticleForm(forms.ModelForm):
     class Meta:
         model=Article
         fields = ('title','category','featured_image','short_description','blogbody','status','is_feature')
+
+class AddUserForm(UserCreationForm):
+    class Meta:
+        model= User
+        fields = ('username','first_name','last_name','email','is_active','is_staff','groups','user_permissions')
+
+
+class EditUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields=('username','first_name','last_name','email','is_active','is_staff','groups','user_permissions')

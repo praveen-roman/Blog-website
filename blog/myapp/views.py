@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404,redirect
 from .models import Categories, Article,About
-from .form import RegisterForm,LoginForm,CategoryForm,ArticleForm
+from .form import RegisterForm,LoginForm,CategoryForm,ArticleForm,AddUserForm,EditUserForm
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate ,login
@@ -8,6 +8,10 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.contrib.auth.models import User
+
+
+\
 
 def home(request):
     search = request.GET.get('search')
@@ -204,8 +208,17 @@ def delete_category(request,pk):
     return redirect('categories')
 
 def articles(request):
-    article=Article.objects.all()
-    return render(request,'dashboard/articles.html',{'articles':article})
+
+    if request.user.has_perm('myapp.change_article'):
+        articles = Article.objects.all()
+    else:
+        articles = Article.objects.filter(author=request.user)
+
+    return render(
+        request,
+        'dashboard/articles.html',
+        {'articles': articles}
+    )
 
 def add_articles(request):
     if request.method=="POST":
@@ -222,24 +235,90 @@ def add_articles(request):
   
     return render(request,'dashboard/add_article.html',{'form':form})
 
-def edit_articles(request,pk):
-    article=get_object_or_404(Article,pk=pk)
-    if request.method=="POST":
-        form=ArticleForm(request.POST,request.FILES,instance=article)
+def edit_articles(request, pk):
+    article = get_object_or_404(Article, pk=pk)
+
+    if not (
+        request.user.has_perm('myapp.change_article')
+        or article.author == request.user
+    ):
+        return redirect('articles')
+
+    if request.method == "POST":
+        form = ArticleForm(
+            request.POST,
+            request.FILES,
+            instance=article
+        )
         if form.is_valid():
             form.save()
             return redirect('articles')
     else:
-        form=ArticleForm(instance=article)
+        form = ArticleForm(instance=article)
+
     context = {
         'form': form,
         'articles': article
     }
-    
-    return render(request,'dashboard/edit_article.html',context)
 
+    return render(
+        request,
+        'dashboard/edit_article.html',
+        context
+    )
+def delete_articles(request, pk):
+    article = get_object_or_404(Article, pk=pk)
+    if not (request.user.has_perm('myapp.delete_article') or article.author == request.user):
+        return redirect('articles')
 
-def delete_articles(request,pk):
-    article=get_object_or_404(Article,pk=pk)
     article.delete()
     return redirect('articles')
+def users(request):
+    users=User.objects.all()
+    context = {
+        'users':users
+    }
+    return render(request,'dashboard/users.html',context)
+def add_user(request):
+    if request.method=="POST":
+        form=AddUserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('users')
+        else:
+            print(form.errors)
+    else:
+        form = AddUserForm()
+    context={
+        'form':form
+    }
+    return render(request,'dashboard/add_user.html',context)
+
+
+def edit_user(request,pk):
+    user=get_object_or_404(User,pk=pk)
+    if request.method == "POST":
+        form = EditUserForm(request.POST,instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('users')
+    else:
+        form = EditUserForm(instance=user)
+    
+    context={
+        'form':form,
+        'user':user    }
+        
+    return render(request,'dashboard/edit_user.html',context)
+
+def delete_user(request, pk):
+    user = get_object_or_404(User, pk=pk)
+
+    if user.is_superuser:
+        return redirect('users')
+
+    if user == request.user:
+        return redirect('users')
+
+    user.delete()
+    return redirect('users')

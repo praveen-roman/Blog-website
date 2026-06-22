@@ -19,5 +19,9 @@ urlpatterns=[
     path('articles/',views.articles,name='articles'),
     path('articles/add',views.add_articles,name='add_articles'),
     path('articles/edit_a/<int:pk>/',views.edit_articles,name='edit_articles'),
-    path('articles/delete/<int:pk>/',views.delete_articles,name='delete_articles')
+    path('articles/delete/<int:pk>/',views.delete_articles,name='delete_articles'),
+    path('users/',views.users,name='users'),
+    path('users/add',views.add_user,name='add_user'),
+    path('users/edit/<int:pk>',views.edit_user,name='edit_user'),
+    path('users/delete/<int:pk>',views.delete_user,name='delete_user')
 ]
