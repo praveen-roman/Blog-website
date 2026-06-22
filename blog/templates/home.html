@@ -41,7 +41,7 @@
 <h1 style="color: gold" class="fw-bold  mt-4 mb-4""> <strong>FEATURED POSTS  </strong></h1>
 
 <div class=" row">
-    {% for post in posts %}
+    {% for post in page_obj %}
     {% if not forloop.first %}
     <div class="col-md-6 mb-4">
         <div class="card blog-card h-100">
@@ -84,5 +84,34 @@
     {% endif %}
     {% endfor %}
     </div>
+    <nav>
+        <ul class="pagination justify-content-center">
+
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                    Previous
+                </a>
+            </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">
+                    {{ num }}
+                </a>
+            </li>
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                    Next
+                </a>
+            </li>
+            {% endif %}
+
+        </ul>
+    </nav>
 
     {% endblock %}

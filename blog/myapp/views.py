@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404,redirect
-from .models import Categories, Article,About
+from .models import Categories, Article,About,Comment
 from .form import RegisterForm,LoginForm,CategoryForm,ArticleForm,AddUserForm,EditUserForm
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -9,9 +9,9 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
+from django.http import HttpResponseRedirect
 
-
-\
 
 def home(request):
     search = request.GET.get('search')
@@ -25,10 +25,12 @@ def home(request):
             Q(title__icontains=search) | Q(short_description__icontains=search)
         )
 
-    posts = posts[:6]
+    paginator=Paginator(posts,5)
+    page_number=request.GET.get('page')
+    page_obj=paginator.get_page(page_number)
 
     return render(request, 'home.html', {
-        'posts': posts
+        'page_obj':page_obj
     })
 
 def category_posts(request, id):
@@ -56,8 +58,21 @@ def post_detail(request, slug):
         status='Published'
     )
 
+    if request.method=='POST':
+        comment=Comment()
+        comment.user = request.user
+        comment.article =post
+        comment.comment=request.POST['comment']
+        comment.save()
+        return HttpResponseRedirect (request.path_info)
+    comments=Comment.objects.filter(article=post)
+    comment_count=comments.count()
+    print(comments)
+
     context = {
-        'post': post
+        'post': post,
+        'comments':comments,
+        'comment_count':comment_count
     }
 
     return render(request, 'post_detail.html', context)
@@ -159,6 +174,7 @@ def dashboard(request):
 
 
 def categories(request):
+
     return render(request,'dashboard/categories.html')
 
 def add_category(request):
@@ -322,3 +338,4 @@ def delete_user(request, pk):
 
     user.delete()
     return redirect('users')
+

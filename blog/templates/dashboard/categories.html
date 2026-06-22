@@ -27,7 +27,7 @@
                 {% for cat in categories %}
                 <tr>
                     <th>{{ forloop.counter }}</th>
-                    <td>{{ cat }}</td>
+                    <td>{{ cat.category_name}}</td>
                     <td>{{ cat.created_at }}</td>
                     <td>{{ cat.updated_at }}</td>
 

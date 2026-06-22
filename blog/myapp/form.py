@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from .models import Categories,Article
+from .models import Categories,Article,Comment
 
 
 class RegisterForm(UserCreationForm):
@@ -51,3 +51,5 @@ class EditUserForm(forms.ModelForm):
     class Meta:
         model = User
         fields=('username','first_name','last_name','email','is_active','is_staff','groups','user_permissions')
+
+

@@ -88,7 +88,7 @@
 
                 <div class="card-header bg-white">
                     <h4 class="mb-0">
-                        Comments
+                        Comments {{comment_count}}
                     </h4>
                 </div>
 
@@ -139,16 +139,16 @@
                 </div>
 
                 <div class="card-body">
+                    {% if user.authenticated %}
 
-                    <form method="POST">
+                    <form method="POST" action="">
                         {% csrf_token %}
 
                         <textarea
                             name="comment"
                             rows="5"
                             class="form-control"
-                            placeholder="Write your comment here..."
-                        ></textarea>
+                            placeholder="Write your comment here..."></textarea>
 
                         <button type="submit"
                                 class="btn btn-dark mt-3">
@@ -156,6 +156,9 @@
                         </button>
 
                     </form>
+                    {% else %}
+                    <p>Please <span><a href="{% url 'login_page' %}" > Login</a></span> to Wrie The Comment</p>
+                    {% endif %}
 
                 </div>
 

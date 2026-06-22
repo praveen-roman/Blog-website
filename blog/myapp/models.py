@@ -36,8 +36,8 @@ def save(self, *args, **kwargs):
     self.slug = slugify(self.title)
     super().save(*args, **kwargs)
 
-    def __str__(self):
-        return self.title
+def __str__(self):
+    return self.title
     
 
 class About(models.Model):
@@ -48,3 +48,16 @@ class About(models.Model):
 
     def __str__(self):
         return self.heading
+
+class Comment(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    article=models.ForeignKey(Article,on_delete=models.CASCADE)
+    comment=models.TextField()
+    created_at=models.DateTimeField(auto_now_add=True)
+    updated_at=models.DateTimeField(auto_now=True)
+
+
+
+
+    def __str__(self):
+        return self.comment
